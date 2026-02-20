@@ -1,3 +1,5 @@
+
+
 /** A linked list of character data objects.
  *  (Actually, a list of Node objects, each holding a reference to a character data object.
  *  However, users of this class are not aware of the Node objects. As far as they are concerned,
@@ -30,13 +32,28 @@ public class List {
 
     /** GIVE Adds a CharData object with the given character to the beginning of this list. */
     public void addFirst(char chr) {
-        // Your code goes here
+        CharData newCharData = new CharData(chr);
+        Node newNode = new Node(newCharData);
+        newNode.next = first;
+        first = newNode;
+        this.size++;
     }
     
     /** GIVE Textual representation of this list. */
     public String toString() {
-        // Your code goes here
-        return "";
+        Node newNode = first;
+        if(this.first==null){
+            return "()";
+        }
+        String newString = "(";
+        while(newNode != null){
+            newString += newNode.cp.toString();
+            newNode = newNode.next;
+            if(newNode!=null){
+                newString += " ";
+            }
+        }
+        return newString + ")";
     }
 
     /** Returns the index of the first CharData object in this list
@@ -44,6 +61,15 @@ public class List {
      *  or -1 if there is no such object in this list. */
     public int indexOf(char chr) {
         // Your code goes here
+        int index = 0;
+        Node newNode = first;
+        while(newNode != null){
+        if( newNode.cp.chr == chr){
+            return index;
+        }
+        index++;
+        newNode = newNode.next;
+        }
         return -1;
     }
 
@@ -51,23 +77,52 @@ public class List {
      *  increments its counter. Otherwise, adds a new CharData object with the
      *  given chr to the beginning of this list. */
     public void update(char chr) {
-        // Your code goes here
+        int indexNum = indexOf(chr);
+        if(indexNum == -1){
+            addFirst(chr);
+        }
+        else{
+            CharData data = get(indexNum);
+            data.count++;
+        }
     }
 
     /** GIVE If the given character exists in one of the CharData objects
      *  in this list, removes this CharData object from the list and returns
      *  true. Otherwise, returns false. */
     public boolean remove(char chr) {
-        // Your code goes here
-        return false;
-    }
+        int indexNum = indexOf(chr);
+        if(indexNum == 0){
+            first = first.next;
+            this.size--;
+            return true;
+        }
+        if(indexNum == -1){
+            return false;
+        }
+        Node newNode = first;
+        for(int i = 0 ; i < indexNum -1; i++){
+           newNode = newNode.next;
+        }
+        newNode.next = newNode.next.next;
+        this.size--;
+            return true;
+        }
+
+
 
     /** Returns the CharData object at the specified index in this list. 
      *  If the index is negative or is greater than the size of this list, 
      *  throws an IndexOutOfBoundsException. */
     public CharData get(int index) {
-        // Your code goes here
-        return null;
+        Node current = first;
+        if(index < 0 || index >= size) {
+            throw new IndexOutOfBoundsException();
+        }
+        for(int i = 0; i < index; i++){
+            current = current.next;
+        }
+        return current.cp;
     }
 
     /** Returns an array of CharData objects, containing all the CharData objects in this list. */
